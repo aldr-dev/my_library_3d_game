@@ -1,0 +1,30 @@
+// SQLite не поддерживает массивы строк, поэтому `authors` и `categories`
+// хранятся как JSON-строки и (де)сериализуются в API-слое.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id            String    @id @default(cuid())
+  title         String
+  authors       String    @default("[]")
+  description   String?
+  coverUrl      String?
+  isbn          String?
+  publishedDate String?
+  pageCount     Int?
+  categories    String    @default("[]")
+  status        String    @default("completed")
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  // Пользовательское размещение книги: индекс шкафа и полочного ряда.
+  // null — книга расставляется автоматически.
+  shelfIndex    Int?
+  rowIndex      Int?
+}
